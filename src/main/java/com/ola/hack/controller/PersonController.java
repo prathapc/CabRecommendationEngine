@@ -67,7 +67,7 @@ public class PersonController {
 	
     @RequestMapping("/recommend/{userId}")
     public String recommendCabForUser(@PathVariable("userId") int userId, Model model){
-        bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(userId);
+        bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(userId, null, null);
     	return null;
     }
 }

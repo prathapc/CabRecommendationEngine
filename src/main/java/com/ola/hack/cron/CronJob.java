@@ -28,10 +28,8 @@ public class CronJob {
 	@Autowired
 	private CustomerService customerService;
 
-	@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 3600000)
 	public void fixedDelayTask() {
-		System.out.println(new Date() + " This runs in a fixed delay");
-		
 		Date analyseTillDate = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(analyseTillDate);
@@ -41,7 +39,7 @@ public class CronJob {
 		//hit db and get all customer ride details
 		//then write an algo to fetch customer ids for which we need to send notification
 		List<CustomerRideDetails> customerRideDetails =  customerService.listCustomerRideDetailsForRecommendation(101, analyseTillDate);
-		long analyseingPastDays = RecommendationEngineUtil.getDifferenceDays(new Date(), analyseTillDate);
+		long analyseingPastDays = RecommendationEngineUtil.getDifferenceDays(analyseTillDate, new Date());
 		List<Integer> pastRideTimes = new ArrayList<Integer>();
 		for(CustomerRideDetails customerRideDetail : customerRideDetails) {
 			//check whether already booked can in last 3 hours, if not proceed
@@ -49,10 +47,10 @@ public class CronJob {
 		}
 		Collections.sort(pastRideTimes);
 		int prevMin,currMinute;
-		int count=0,prevCount=0;
+		int count=0;
 		int finalMin=-1;
 		int i,j;
-		Set<Integer> notificationTriggerTimings = new HashSet<Integer>();
+		Set<Date> notificationTriggerTimings = new HashSet<Date>();
 		for(i=0;i<pastRideTimes.size(); i++) {
 			prevMin = pastRideTimes.get(i);
 			for(j=i+1;j<pastRideTimes.size(); j++) {
@@ -63,12 +61,12 @@ public class CronJob {
 					break;
 			}
 			if(count > (analyseingPastDays/3)) {
-				notificationTriggerTimings.add(finalMin);
+				notificationTriggerTimings.add(RecommendationEngineUtil.getTimeFromMinutesOfTheDay(finalMin));
 			}
 		}
 		if(notificationTriggerTimings.size() > 0) {
 			//recommendation found for the customer
-			bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(101);
+			bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(101, "APA91bGxfcFj2fcQkFlVI5Fc-U2QjiD3co7Q6d3_HRD2x_n1jmNxilxyRtL4HWuJ2mAGY9utbsbSADjX3lzs9OjjgjmERPuGqGIgr4qcv0kTUoXlYGQyA44mgV8ZQOGtsZM6B1LeiRnP", notificationTriggerTimings);
 		}
 	}
 	

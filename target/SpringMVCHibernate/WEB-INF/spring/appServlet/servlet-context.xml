@@ -41,6 +41,8 @@
 		<beans:property name="annotatedClasses">
 			<beans:list>
 				<beans:value>com.ola.hack.model.Person</beans:value>
+				<beans:value>com.ola.hack.model.Customer</beans:value>
+				<beans:value>com.ola.hack.model.CustomerRideDetails</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
