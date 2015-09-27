@@ -29,16 +29,16 @@ public class CustomerRideDetails {
 	private Customer customer;
 	
 	@Column(name="from_latitude",columnDefinition="decimal(9,6)")
-	private Double fromLatitude;
+	private Float fromLatitude;
 	
 	@Column(name="to_latitude",columnDefinition="decimal(9,6)")
-	private Double toLatitude;
+	private Float toLatitude;
 	
 	@Column(name="from_langitude",columnDefinition="decimal(9,6)")
-	private Double fromLangitude;
+	private Float fromLangitude;
 	
 	@Column(name="to_langitude",columnDefinition="decimal(9,6)")
-	private Double toLangitude;
+	private Float toLangitude;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="ride_time")
@@ -64,36 +64,44 @@ public class CustomerRideDetails {
 		this.customer = customer;
 	}
 
-	public Double getFromLatitude() {
+	public Float getFromLatitude() {
 		return fromLatitude;
 	}
 
-	public void setFromLatitude(Double fromLatitude) {
+	public void setFromLatitude(Float fromLatitude) {
 		this.fromLatitude = fromLatitude;
 	}
 
-	public Double getToLatitude() {
+	public Float getToLatitude() {
 		return toLatitude;
 	}
 
-	public void setToLatitude(Double toLatitude) {
+	public void setToLatitude(Float toLatitude) {
 		this.toLatitude = toLatitude;
 	}
 
-	public Double getFromLangitude() {
+	public Float getFromLangitude() {
 		return fromLangitude;
 	}
 
-	public void setFromLangitude(Double fromLangitude) {
+	public void setFromLangitude(Float fromLangitude) {
 		this.fromLangitude = fromLangitude;
 	}
 
-	public Double getToLangitude() {
+	public Float getToLangitude() {
 		return toLangitude;
 	}
 
-	public void setToLangitude(Double toLangitude) {
+	public void setToLangitude(Float toLangitude) {
 		this.toLangitude = toLangitude;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Date getRideTime() {

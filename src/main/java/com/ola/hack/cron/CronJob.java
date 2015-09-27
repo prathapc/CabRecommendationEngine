@@ -28,7 +28,7 @@ public class CronJob {
 	@Autowired
 	private CustomerService customerService;
 
-	@Scheduled(fixedDelay = 3600000)
+	@Scheduled(fixedDelay = 3000)
 	public void fixedDelayTask() {
 		Date analyseTillDate = new Date();
 		Calendar c = Calendar.getInstance();
@@ -69,10 +69,47 @@ public class CronJob {
 			bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(101, "APA91bGxfcFj2fcQkFlVI5Fc-U2QjiD3co7Q6d3_HRD2x_n1jmNxilxyRtL4HWuJ2mAGY9utbsbSADjX3lzs9OjjgjmERPuGqGIgr4qcv0kTUoXlYGQyA44mgV8ZQOGtsZM6B1LeiRnP", notificationTriggerTimings);
 		}
 	}
-	
-	/*@Scheduled(cron = "10 * * * * *")
+
+	//@Scheduled(fixedDelay = 3000)
+	//@Scheduled(cron = "0 0 12 1 1/1 ? *") /* 1st of every month */
 	public void cronTask(){
-		System.out.println(new Date() + " This runs in a cron schedule");
-	}*/
+		Date analyseTillDate = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(analyseTillDate);
+		c.add(Calendar.DATE, -30);
+		analyseTillDate.setTime( c.getTime().getTime() );
+
+		List<CustomerRideDetails> customerRideDetails =  customerService.listCustomerRideDetailsForRecommendation(101, analyseTillDate);
+		Set<Date> pastRideTimes = new HashSet<Date>();
+		
+		Float distBetweenTwoRideDestinations;
+		int count=0;
+		int i,j;
+		Set<Date> tempPastRideTimes = new HashSet<Date>();
+		for(i=0;i<customerRideDetails.size(); i++) {
+			for(j=i+1;j<customerRideDetails.size(); j++) {
+				distBetweenTwoRideDestinations = RecommendationEngineUtil.distBtweenLatLonPairs(customerRideDetails.get(i).getFromLatitude(), customerRideDetails.get(i).getFromLangitude(), customerRideDetails.get(j).getFromLatitude(), customerRideDetails.get(j).getFromLangitude());
+				if(distBetweenTwoRideDestinations <= 200) {
+					count++;
+					tempPastRideTimes.add(customerRideDetails.get(i).getRideTime());
+					tempPastRideTimes.add(customerRideDetails.get(j).getRideTime());
+				}
+			}
+			if(count >= 2) {
+				pastRideTimes.addAll(tempPastRideTimes);
+			}
+			count=0;
+			tempPastRideTimes = new HashSet<Date>();
+		}
+		System.out.println(pastRideTimes);
+		
+	}
+	
+	public static void main(String args[]) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		System.out.println(cal.get(Calendar.DAY_OF_WEEK));
+				
+	}
 
 }

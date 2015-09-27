@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ola.hack.DTO.LocationDTO;
 import com.ola.hack.model.Person;
 import com.ola.hack.recommender.BookingTimeBasedRecommender;
 import com.ola.hack.service.PersonService;
@@ -51,6 +52,15 @@ public class PersonController {
 		
 	}
 	
+	@RequestMapping(value= "/recommend", method = RequestMethod.POST)
+	public String recommendCabBasedOnLocation(@ModelAttribute("location") LocationDTO location){
+		//location based recommendation
+		System.out.println(location.getLatitude()+"::"+location.getLongitude());
+		
+		return "redirect:/persons";
+		
+	}
+	
 	@RequestMapping("/remove/{id}")
     public String removePerson(@PathVariable("id") int id){
 		
@@ -65,9 +75,10 @@ public class PersonController {
         return "person";
     }
 	
-    @RequestMapping("/recommend/{userId}")
-    public String recommendCabForUser(@PathVariable("userId") int userId, Model model){
-        bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(userId, null, null);
+    @RequestMapping("/recommend/{latitude}/{longitude}")
+    public String recommendCabForUser(@PathVariable("latitude") int latitude, @PathVariable("longitude") int longitude, Model model){
+        //bookingTimeBasedRecommender.initiatePushNotificationsBasedOnBookingTime(userId, null, null);
+    	System.out.println("Got user address!!"+latitude+"::"+longitude);
     	return null;
     }
 }
